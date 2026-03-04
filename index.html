@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IDX Shareholder Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="siteHeader">
+    <div class="header-left">
+      <div class="logo" id="logoHome" style="cursor:pointer" title="Back to Dashboard">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="6" fill="var(--accent)"/>
+          <path d="M7 20L7 12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M12 20L12 8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M17 20L17 14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M22 20L22 10" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <h1>IDX Shareholder Explorer</h1>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="search-container">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search stock code or investor name..." autocomplete="off">
+          <button class="search-clear" id="searchClear" title="Clear">&times;</button>
+        </div>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <a class="donate-btn" href="https://saweria.co/eveegaooo" target="_blank" rel="noopener noreferrer">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Donate
+      </a>
+      <span class="data-badge" id="dataBadge">
+        <svg width="6" height="6" viewBox="0 0 6 6" style="margin-right:4px;vertical-align:middle"><circle cx="3" cy="3" r="3" fill="var(--green)"/></svg>
+        Loading...
+      </span>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ========== DASHBOARD ========== -->
+    <div id="dashboard">
+      <div class="hero-stats" id="heroStats"></div>
+      <div class="dashboard-grid two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Top Investors</h3>
+            <div class="filter-pills" id="tiFilter">
+              <button class="pill active" data-ti="all">All</button>
+              <button class="pill" data-ti="local">Local</button>
+              <button class="pill" data-ti="foreign">Foreign</button>
+              <button class="pill" data-ti="govt">Government</button>
+            </div>
+          </div>
+          <div class="panel-body scroll-y" id="tiBody"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Market Composition</h3>
+            <div class="filter-pills" id="mcFilter">
+              <button class="pill active" data-mc="type">By Type</button>
+              <button class="pill" data-mc="origin">By Origin</button>
+            </div>
+          </div>
+          <div class="panel-body" id="mcBody"></div>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Conglomerate Groups</h3>
+            <div class="filter-pills" id="congFilter">
+              <button class="pill active" data-cong="ownership">By Ownership</button>
+              <button class="pill" data-cong="rumor">By Affiliation</button>
+            </div>
+          </div>
+          <div class="panel-body scroll-y" id="congBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RESULT (side-by-side graph + table) ========== -->
+    <div class="result-panel" id="resultPanel" style="display:none;">
+      <div class="info-header-row">
+        <button class="back-btn" id="backBtn" title="Back">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Back
+        </button>
+        <div class="info-header" id="infoHeader"></div>
+      </div>
+      <div class="stats-row" id="statsRow"></div>
+
+      <!-- Top row: Table | Allocation -->
+      <div class="result-top-split">
+        <div class="result-table-wrap">
+          <div class="split-label">Holder Data</div>
+          <div class="table-scroll" id="tableScroll">
+            <table class="data-table" id="dataTable">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="result-alloc-wrap">
+          <div class="split-label">Allocation</div>
+          <div class="alloc-container" id="allocContainer"></div>
+        </div>
+      </div>
+
+      <!-- Full-width graph below -->
+      <div class="result-graph-full">
+        <div class="split-label">Network Graph <span class="split-hint">drag nodes &middot; scroll to zoom &middot; double-click to explore</span></div>
+        <div class="graph-container">
+          <div class="graph-toolbar">
+            <button class="toolbar-btn" id="zoomIn" title="Zoom In">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <button class="toolbar-btn" id="zoomOut" title="Zoom Out">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+            </button>
+            <button class="toolbar-btn" id="resetView" title="Reset View">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+          </div>
+          <canvas id="graphCanvas"></canvas>
+          <div class="graph-legend">
+            <span class="legend-item"><span class="legend-dot" style="background:var(--node-stock)"></span> Stock</span>
+            <span class="legend-item"><span class="legend-dot" style="background:var(--node-corp)"></span> Corporate</span>
+            <span class="legend-item"><span class="legend-dot" style="background:var(--node-individual)"></span> Individual</span>
+            <span class="legend-item"><span class="legend-dot" style="background:var(--node-institution)"></span> Institution</span>
+            <span class="legend-item"><span class="legend-dot" style="background:var(--node-other)"></span> Other</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ALL LIST (stocks / investors) ========== -->
+    <div id="allListPanel" style="display:none;"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>DATA SOURCE: PT KUSTODIAN SENTRAL EFEK INDONESIA · OWNERSHIP >1% · RECORDED AT KSEI PER 27-FEB-2026 · created by EveeGaooo</p>
+  </footer>
+
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="data.js"></script>
+  <script src="config.js"></script>
+  <script src="utils.js"></script>
+  <script src="graph.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="search.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

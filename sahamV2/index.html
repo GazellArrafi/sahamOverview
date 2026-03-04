@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KSEI Ownership Explorer v2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background blobs -->
+  <div class="ambient">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header" id="siteHeader">
+    <div class="header-left">
+      <div class="logo" id="logoHome" title="Back to Dashboard">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="13" width="4" height="8" rx="1" fill="url(#g1)"/>
+            <rect x="8" y="8" width="4" height="13" rx="1" fill="url(#g2)"/>
+            <rect x="14" y="4" width="4" height="17" rx="1" fill="url(#g3)"/>
+            <rect x="20" y="10" width="4" height="11" rx="1" fill="url(#g4)"/>
+            <defs>
+              <linearGradient id="g1" x1="4" y1="13" x2="4" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient>
+              <linearGradient id="g2" x1="10" y1="8" x2="10" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+              <linearGradient id="g3" x1="16" y1="4" x2="16" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#c084fc"/><stop offset="1" stop-color="#9333ea"/></linearGradient>
+              <linearGradient id="g4" x1="22" y1="10" x2="22" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#e879f9"/><stop offset="1" stop-color="#c026d3"/></linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>KSEI Explorer</h1>
+          <span class="logo-version">v2.0</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="search-container">
+        <div class="search-box" id="searchBox">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Cari kode saham (e.g. BBCA, TLKM)..." autocomplete="off" spellcheck="false">
+          <kbd class="search-kbd">/</kbd>
+          <button class="search-clear" id="searchClear">&times;</button>
+        </div>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="data-badge" id="dataBadge">
+        <span class="badge-dot"></span>
+        Loading...
+      </span>
+      <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main" id="mainContent">
+    <!-- Dashboard View -->
+    <div id="dashboardView">
+      <!-- Hero Stats -->
+      <section class="hero" id="heroSection">
+        <div class="hero-title-row">
+          <div>
+            <h2 class="section-title">Dashboard Overview</h2>
+            <p class="section-sub" id="dataDate">Loading data...</p>
+          </div>
+          <div class="source-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Data from KSEI
+          </div>
+        </div>
+        <div class="hero-grid" id="heroGrid"></div>
+      </section>
+
+      <!-- Charts Row -->
+      <section class="charts-section">
+        <div class="grid-2">
+          <!-- Market Composition Donut -->
+          <div class="card glass">
+            <div class="card-header">
+              <h3>Komposisi Investor (Shares)</h3>
+              <div class="tab-pills" id="mcTabs">
+                <button class="tab active" data-mc="type">By Type</button>
+                <button class="tab" data-mc="origin">Local vs Foreign</button>
+              </div>
+            </div>
+            <div class="card-body chart-body">
+              <canvas id="mcChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Foreign vs Local Overview -->
+          <div class="card glass">
+            <div class="card-header">
+              <h3>Foreign vs Local Overview</h3>
+            </div>
+            <div class="card-body">
+              <div id="flVisual"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Top Foreign & Top Market Cap -->
+      <section class="scanner-section">
+        <div class="grid-2">
+          <!-- Top Foreign Ownership -->
+          <div class="card glass">
+            <div class="card-header">
+              <h3>Top Foreign Ownership</h3>
+              <div class="tab-pills" id="foreignSort">
+                <button class="tab active" data-sort="desc">Highest</button>
+                <button class="tab" data-sort="asc">Lowest</button>
+              </div>
+            </div>
+            <div class="card-body scroll-list" id="foreignList"></div>
+          </div>
+
+          <!-- Top Market Cap -->
+          <div class="card glass">
+            <div class="card-header">
+              <h3>Top Market Cap</h3>
+            </div>
+            <div class="card-body scroll-list" id="mcapList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Investor Type Breakdown -->
+      <section class="type-section">
+        <div class="card glass full-width">
+          <div class="card-header">
+            <h3>Shares by Investor Type</h3>
+            <span class="header-sub">Total shares held per type across all stocks</span>
+          </div>
+          <div class="card-body chart-body" style="min-height:350px">
+            <canvas id="typeBarChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stock Scanner -->
+      <section class="scanner-section">
+        <div class="card glass full-width">
+          <div class="card-header">
+            <h3>Stock Scanner</h3>
+            <div class="scanner-controls">
+              <div class="tab-pills" id="scanSort">
+                <button class="tab active" data-col="foreignPct" data-dir="desc">Foreign %</button>
+                <button class="tab" data-col="localPct" data-dir="desc">Local %</button>
+                <button class="tab" data-col="marketCap" data-dir="desc">Market Cap</button>
+                <button class="tab" data-col="code" data-dir="asc">A-Z</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body scroll-list" style="max-height:500px" id="scannerList"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Detail View -->
+    <div id="detailView" style="display:none;">
+      <button class="back-btn" id="backBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </button>
+      <div class="detail-header" id="detailHeader"></div>
+      <div class="detail-stats" id="detailStats"></div>
+      <div class="detail-content">
+        <div class="grid-2">
+          <div class="card glass">
+            <div class="card-header"><h3>Local vs Foreign</h3></div>
+            <div class="card-body chart-body">
+              <canvas id="detailPieChart"></canvas>
+            </div>
+          </div>
+          <div class="card glass">
+            <div class="card-header"><h3>Breakdown by Investor Type</h3></div>
+            <div class="card-body chart-body">
+              <canvas id="detailBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card glass full-width" style="margin-top:16px;">
+          <div class="card-header">
+            <h3>Detailed Holdings</h3>
+            <span class="header-badge" id="tableCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="dataTable">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  <script src="ksei-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
