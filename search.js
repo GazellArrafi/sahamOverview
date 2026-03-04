@@ -176,8 +176,10 @@ function renderResultTable(type, records) {
   const sorted = [...records].sort((a, b) => b.percentage - a.percentage);
 
   // Set colgroup for fixed column widths
-  const colgroup = document.getElementById('dataTable').querySelector('colgroup');
+  const tableEl = document.getElementById('dataTable');
+  const colgroup = tableEl.querySelector('colgroup');
   if (colgroup) colgroup.remove();
+  tableEl.dataset.type = type;
 
   if (type === 'stock') {
     document.getElementById('dataTable').insertAdjacentHTML('afterbegin',
@@ -350,7 +352,7 @@ function renderAllocation(type, key, records) {
             const c = getPctColor(r.percentage);
             return `<div class="alloc-top-item">
               <span class="alloc-top-rank">${i + 1}</span>
-              <span class="alloc-top-name">${escapeHTML(r.investor_name)}</span>
+              <span class="alloc-top-name" title="${escapeAttr(r.investor_name)}">${escapeHTML(truncTable(r.investor_name, 24))}</span>
               <span class="alloc-top-pct" style="color:${c}">${r.percentage.toFixed(2)}%</span>
             </div>`;
           }).join('')}
@@ -398,7 +400,7 @@ function renderAllocation(type, key, records) {
             const c = getPctColor(r.percentage);
             return `<div class="alloc-top-item">
               <span class="alloc-top-rank">${i + 1}</span>
-              <span class="alloc-top-name"><strong style="color:var(--accent)">${r.share_code}</strong> &middot; ${escapeHTML(r.issuer_name)}</span>
+              <span class="alloc-top-name" title="${escapeAttr(r.issuer_name)}"><strong style="color:var(--accent)">${r.share_code}</strong> &middot; ${escapeHTML(truncTable(r.issuer_name, 20))}</span>
               <span class="alloc-top-pct" style="color:${c}">${r.percentage.toFixed(2)}%</span>
             </div>`;
           }).join('')}

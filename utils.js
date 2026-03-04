@@ -26,6 +26,13 @@ function getTypeName(code) {
   return TYPE_MAP[code] || code || '-';
 }
 
+// Short badge labels for table/allocation display
+const TYPE_SHORT_MAP = { CP:'Corp', ID:'Ind', IS:'Ins', IB:'InvB', MF:'MF', PF:'PF', SC:'Sec', FD:'Fnd', OT:'Oth' };
+function getTypeShort(code) { return TYPE_SHORT_MAP[code] || code || '-'; }
+
+const TYPE_NAME_SHORT = { 'Corporate':'Corp', 'Individual':'Ind', 'Insurance':'Ins', 'Investment Bank':'InvB', 'Mutual Fund':'MF', 'Pension Fund':'PF', 'Securities':'Sec', 'Foundation':'Fnd', 'Other':'Oth' };
+function shortenTypeName(name) { return TYPE_NAME_SHORT[name] || name; }
+
 function getNodeType(investorType) {
   if (investorType === 'CP') return 'corp';
   if (investorType === 'ID') return 'individual';
@@ -46,6 +53,12 @@ function isGovt(d) {
 }
 
 // Color with alpha helper
+// Truncate name for table display (full name remains in title attr)
+function truncTable(str, len = 22) {
+  if (!str) return '';
+  return str.length > len ? str.slice(0, len - 1) + '…' : str;
+}
+
 function colorAlpha(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);

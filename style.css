@@ -77,6 +77,7 @@ body {
   transition: background 0.4s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Subtle animated gradient bg */
@@ -446,11 +447,7 @@ body {
   border-radius: 8px;
 }
 .list-row:last-child { border-bottom: none; }
-.list-row:hover {
-  background: var(--accent-dim);
-  margin: 0 -20px; padding: 11px 20px;
-  border-bottom-color: transparent;
-}
+.list-row:hover { background: var(--accent-dim); border-radius: 8px; }
 
 .list-rank { font-size: 10px; font-weight: 700; color: var(--text-muted); width: 22px; text-align: center; flex-shrink: 0; }
 .list-code { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 48px; }
@@ -729,6 +726,8 @@ body {
   background: var(--bg-card);
 }
 
+/* Column widths set inline on <col> elements */
+
 .data-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
 
 .data-table th {
@@ -848,6 +847,8 @@ body {
   border-radius: var(--radius-md); overflow: hidden;
   max-height: 70vh; overflow-y: auto;
 }
+/* Bar-wrap hides in all-list — value text already shows the number */
+.all-list-body .list-bar-wrap { display: none; }
 
 /* ===== Footer ===== */
 .site-footer {
@@ -860,6 +861,20 @@ body {
   color: var(--text-muted); letter-spacing: 0.04em;
   margin: 0; line-height: 1.6;
 }
+
+/* ===== Donate FAB (mobile only, visible on dashboard) ===== */
+.donate-fab {
+  display: none;
+  position: fixed; bottom: 24px; right: 20px; z-index: 200;
+  align-items: center; gap: 6px;
+  padding: 12px 18px; font-size: 13px; font-family: inherit; font-weight: 700;
+  color: #fff; background: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #a855f7 100%);
+  border: none; border-radius: 50px; text-decoration: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(244,63,94,0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.donate-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(244,63,94,0.5); }
+.donate-fab svg { stroke: #fff; }
 
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
@@ -874,21 +889,66 @@ body {
   .logo h1 { font-size: 14px; }
   .header-center { max-width: 280px; }
   .main-content { padding: 16px 16px 32px; }
-  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+
+  /* Hero stats: 2 | full | 2 layout */
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .hero-card:nth-child(3) { grid-column: 1 / -1; }
+
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   #graphCanvas { height: 360px; }
   .graph-legend { flex-wrap: wrap; gap: 10px; }
   .data-badge { display: none; }
   .donate-btn { display: none; }
+  .donate-fab { display: flex; }
   .cong-grid { grid-template-columns: 1fr; }
   .mc-chart-area { flex-direction: column; }
+
+  /* Table: mobile layout with horizontal scroll */
+  .table-scroll { overflow-x: auto; width: 100%; }
+  .data-table { font-size: 11px; }
+  .data-table th, .data-table td { padding: 8px 6px; }
+  .data-table tr td:first-child { font-size: 11px; }
+
+  /* Stock table: hide Tipe & Status on mobile, show Pemegang Saham | Lembar Saham | % */
+  .data-table[data-type="stock"] { table-layout: auto; }
+  .data-table[data-type="stock"] th:nth-child(3),
+  .data-table[data-type="stock"] td:nth-child(3),
+  .data-table[data-type="stock"] th:nth-child(4),
+  .data-table[data-type="stock"] td:nth-child(4) { display: none; }
+
+  /* All-list: card layout, single-line */
+  .all-list-body { padding: 8px; }
+  .all-list-body .list-row {
+    border-radius: 12px;
+    background: var(--bar-bg);
+    border: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 5px;
+    padding: 12px 14px;
+  }
+  .all-list-body .list-row:last-child { border-bottom: 1px solid var(--border); }
+  .all-list-body .list-row:hover { margin: 0 0 5px 0; padding: 12px 14px; }
+  .all-list-body .list-name { max-width: 160px; }
 }
 
 @media (max-width: 480px) {
-  .hero-stats { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: 1fr; }
+  .hero-card { padding: 16px; }
+  .hero-card .hc-value { font-size: 22px; }
+
+  /* Stats: force 2x2 */
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stat-card { padding: 14px; }
+  .stat-card .stat-value { font-size: 20px; }
+
   #graphCanvas { height: 300px; }
   .fl-stat-grid { grid-template-columns: 1fr; }
   .logo h1 { display: none; }
   .header-center { max-width: unset; }
+
+  /* Result top split: tighten */
+  .result-alloc-wrap { padding: 0; }
+  .alloc-container { padding: 16px; }
+
+  /* All-list: tighter card padding at very small screens */
+  .all-list-body .list-row { padding: 10px 12px; }
 }

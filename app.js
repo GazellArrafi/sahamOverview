@@ -49,22 +49,35 @@ function navigateTo(type, key) {
   document.getElementById('searchClear').classList.add('visible');
   document.getElementById('searchDropdown').classList.remove('open');
   document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('allListPanel').style.display = 'none';
   document.getElementById('resultPanel').style.display = '';
   showResult(type, key);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+const LIST_PANEL_TYPES = new Set(['allStocks', 'allInvestors', 'freeFloat']);
+
 function navigateBack() {
   navHistory.pop();
   if (navHistory.length > 0) {
     const prev = navHistory[navHistory.length - 1];
-    document.getElementById('searchInput').value = prev.key;
     document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('resultPanel').style.display = '';
-    showResult(prev.type, prev.key);
+    if (LIST_PANEL_TYPES.has(prev.type)) {
+      // Restore all-list panel (content already in DOM)
+      document.getElementById('resultPanel').style.display = 'none';
+      document.getElementById('allListPanel').style.display = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('searchClear').classList.remove('visible');
+    } else {
+      document.getElementById('allListPanel').style.display = 'none';
+      document.getElementById('resultPanel').style.display = '';
+      document.getElementById('searchInput').value = prev.key;
+      showResult(prev.type, prev.key);
+    }
   } else {
     showDashboard();
   }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function showDashboard() {
