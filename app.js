@@ -83,7 +83,7 @@ var z=Object.defineProperty,h=Object.defineProperties;var p=Object.getOwnPropert
       <span class="list-bar-wrap"><div class="list-bar"><div class="list-bar-fill" style="width:${J.stockCount/U*100}%;background:var(--accent)"></div></div></span>
       <span class="list-value">${J.stockCount} stocks</span>
     </div>`}).join(""),bindListClicks(b)}let congData=[];function renderConglomerates(i){var I;const l=document.getElementById("congBody");if(congData=[],i==="rumor")for(const U of CONGLOMERATES_RUMOR){const b=[],N=new Set;for(const J of U.stocks){const Z=stockIndex[J];if(Z)for(const m of Z)b.push(m),N.add(m.investor_name)}congData.push(d(Y({},U),{investors:[...N],records:b}))}else for(const U of CONGLOMERATES){const b=new Set,N=new Set,J=[];for(const Z of DATA){const m=Z.investor_name.toUpperCase(),j=U.keywords.some(c=>m.includes(c.toUpperCase())),V=(I=U.excludeKeywords)==null?void 0:I.some(c=>m.includes(c.toUpperCase()));j&&!V&&(b.add(Z.share_code),N.add(Z.investor_name),J.push(Z))}b.size>0&&congData.push(d(Y({},U),{stocks:[...b].sort(),investors:[...N],records:J}))}congData.sort((U,b)=>b.stocks.length-U.stocks.length),l.innerHTML=`<div class="cong-grid">${congData.map(U=>`
-    <div class="cong-card" data-cong="${escapeAttr(U.name)}" style="border-left-color:${U.color}">
+    <div class="cong-card" data-cong="${escapeAttr(U.name)}" style="border-top-color:${U.color}">
       <div class="cc-top">
         <div class="cc-name" style="color:${U.color}">${U.name}</div>
         <div class="cc-stats">
@@ -93,8 +93,8 @@ var z=Object.defineProperty,h=Object.defineProperties;var p=Object.getOwnPropert
       </div>
       <div class="cc-desc">${U.desc}</div>
       <div class="cc-stocks">
-        ${U.stocks.slice(0,12).map(b=>`<span class="cc-chip" style="background:${colorAlpha(U.color,.15)};color:${U.color}">${b}</span>`).join("")}
-        ${U.stocks.length>12?`<span class="cc-chip" style="background:var(--bar-bg);color:var(--text-muted)">+${U.stocks.length-12}</span>`:""}
+        ${U.stocks.slice(0,6).map(b=>`<span class="cc-chip" style="background:${colorAlpha(U.color,.15)};color:${U.color}">${b}</span>`).join("")}
+        ${U.stocks.length>6?`<span class="cc-chip" style="background:var(--bar-bg);color:var(--text-muted)">+${U.stocks.length-6}</span>`:""}
       </div>
     </div>`).join("")}</div>`,l.querySelectorAll(".cong-card").forEach(U=>{U.addEventListener("click",()=>{const b=congData.find(N=>N.name===U.dataset.cong);b&&navigateTo("conglomerate",b.name)})})}function bindListClicks(i){i.querySelectorAll(".list-row[data-action]").forEach(l=>{l.addEventListener("click",()=>navigateTo(l.dataset.action,l.dataset.key))})}function showFreeFloatScanner(){navHistory.push({type:"freeFloat",key:"freeFloat"}),document.getElementById("dashboard").style.display="none",document.getElementById("resultPanel").style.display="none",document.getElementById("allListPanel").style.display="",window.scrollTo({top:0,behavior:"smooth"});const i=Object.values(stockMeta),l=i.reduce((U,b)=>U+b.freeFloat,0)/i.length,I=document.getElementById("allListPanel");I.innerHTML=`
     <div class="info-header-row">

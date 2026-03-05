@@ -368,7 +368,7 @@ function renderConglomerates(mode) {
   congData.sort((a, b) => b.stocks.length - a.stocks.length);
 
   el.innerHTML = `<div class="cong-grid">${congData.map(c => `
-    <div class="cong-card" data-cong="${escapeAttr(c.name)}" style="border-left-color:${c.color}">
+    <div class="cong-card" data-cong="${escapeAttr(c.name)}" style="border-top-color:${c.color}">
       <div class="cc-top">
         <div class="cc-name" style="color:${c.color}">${c.name}</div>
         <div class="cc-stats">
@@ -378,8 +378,8 @@ function renderConglomerates(mode) {
       </div>
       <div class="cc-desc">${c.desc}</div>
       <div class="cc-stocks">
-        ${c.stocks.slice(0, 12).map(s => `<span class="cc-chip" style="background:${colorAlpha(c.color, 0.15)};color:${c.color}">${s}</span>`).join('')}
-        ${c.stocks.length > 12 ? `<span class="cc-chip" style="background:var(--bar-bg);color:var(--text-muted)">+${c.stocks.length - 12}</span>` : ''}
+        ${c.stocks.slice(0, 6).map(s => `<span class="cc-chip" style="background:${colorAlpha(c.color, 0.15)};color:${c.color}">${s}</span>`).join('')}
+        ${c.stocks.length > 6 ? `<span class="cc-chip" style="background:var(--bar-bg);color:var(--text-muted)">+${c.stocks.length - 6}</span>` : ''}
       </div>
     </div>`).join('')}</div>`;
 
