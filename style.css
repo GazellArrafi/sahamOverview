@@ -321,7 +321,7 @@ body {
 }
 .panel-sub { font-size: 11px; color: var(--text-muted); }
 .panel-body { padding: 20px 24px; flex: 1; }
-.panel-body.scroll-y { flex: 1; min-height: 0; overflow-y: auto; }
+.panel-body.scroll-y { max-height: 660px; overflow-y: auto; }
 
 .filter-pills { display: flex; gap: 4px; flex-wrap: wrap; }
 
